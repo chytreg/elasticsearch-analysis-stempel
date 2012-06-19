@@ -31,6 +31,6 @@ public class PolishAnalysisBinderProcessor extends AnalysisModule.AnalysisBinder
     }
     @Override
     public void processTokenFilters(TokenFiltersBindings tokenFiltersBindings) {
-        tokenFiltersBindings.processTokenFilter("polish_stemmer", PolishSteamTokenFilterFactory.class);
+        tokenFiltersBindings.processTokenFilter("polish_stemmer", PolishStemTokenFilterFactory.class);
    }
 }

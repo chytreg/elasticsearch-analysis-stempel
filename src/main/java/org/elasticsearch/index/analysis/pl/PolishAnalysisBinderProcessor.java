@@ -28,6 +28,7 @@ public class PolishAnalysisBinderProcessor extends AnalysisModule.AnalysisBinder
     @Override
     public void processAnalyzers(AnalyzersBindings analyzersBindings) {
         analyzersBindings.processAnalyzer("polish", PolishAnalyzerProvider.class);
+        analyzersBindings.processAnalyzer("morfologik", MorfologikAnalyzerProvider.class);
     }
     @Override
     public void processTokenFilters(TokenFiltersBindings tokenFiltersBindings) {

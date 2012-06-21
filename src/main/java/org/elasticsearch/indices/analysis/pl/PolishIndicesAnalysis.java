@@ -35,6 +35,11 @@ import org.apache.lucene.analysis.stempel.StempelFilter;
 import org.apache.lucene.analysis.stempel.StempelStemmer;
 import org.egothor.stemmer.Trie;
 
+import morfologik.stemming.*;
+import morfologik.stemming.PolishStemmer.DICTIONARY;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.morfologik.*;
+
 import java.io.IOException;
 
 /**
@@ -61,6 +66,16 @@ public class PolishIndicesAnalysis extends AbstractComponent {
                     throw new RuntimeException("Unable to load default stemming tables", ex);
                 }
                 return new StempelFilter(tokenStream, new StempelStemmer(tire));
+            }
+        }));
+
+        indicesAnalysisService.tokenFilterFactories().put("morfologik_stem", new PreBuiltTokenFilterFactoryFactory(new TokenFilterFactory() {
+            @Override public String name() {
+                return "morfologik_stem";
+            }
+
+            @Override public TokenStream create(TokenStream tokenStream) {
+                return new MorfologikFilter(tokenStream, PolishStemmer.DICTIONARY.COMBINED, Lucene.ANALYZER_VERSION);
             }
         }));
     }

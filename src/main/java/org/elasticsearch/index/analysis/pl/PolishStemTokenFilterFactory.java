@@ -19,6 +19,7 @@
 
 package org.elasticsearch.index.analysis.pl;
 
+import org.apache.lucene.analysis.pl.PolishAnalyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.stempel.StempelFilter;
 import org.apache.lucene.analysis.stempel.StempelStemmer;
@@ -30,13 +31,23 @@ import org.elasticsearch.index.Index;
 import org.elasticsearch.index.settings.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenFilterFactory;
 
+import java.io.IOException;
+
+
+
 public class PolishStemTokenFilterFactory extends AbstractTokenFilterFactory {
 
     private final StempelStemmer stemmer;
 
     @Inject public PolishStemTokenFilterFactory(Index index, @IndexSettings Settings indexSettings, @Assisted String name, @Assisted Settings settings) {
         super(index, indexSettings, name, settings);
-        stemmer = new StempelStemmer(new Trie(true));
+        Trie tire;
+        try {
+            tire = StempelStemmer.load(PolishAnalyzer.class.getResourceAsStream(PolishAnalyzer.DEFAULT_STEMMER_FILE));
+        } catch (IOException ex) {
+            throw new RuntimeException("Unable to load default stemming tables", ex);
+        }
+        stemmer = new StempelStemmer(tire);
     }
 
     @Override public TokenStream create(TokenStream tokenStream) {
